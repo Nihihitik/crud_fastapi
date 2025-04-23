@@ -40,12 +40,13 @@ async def create_message(message:  Message) -> str:
     return f"Сообщение создано"
 
 @app.put("/message/{message_id}")
-async def update_message(message_id: str, message: str = Body()) -> str:
-    messages_db[message_id] = message
-    return f"Сообщение изменено!"
+async def update_message(message_id: int, message: str = Body()) -> str:
+    edit_message = messages_db[message_id]
+    edit_message.text = message
+    return f"Сообщение обновлено!"
 
 @app.delete("/message/{message_id}")
-async def delete_message(message_id: str) -> str:
+async def delete_message(message_id: int) -> str:
     messages_db.pop(message_id)
     return f"Сообщение с ID: {message_id} было удалено!"
 
