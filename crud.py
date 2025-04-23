@@ -1,22 +1,43 @@
 from fastapi import FastAPI, Body
+from pydantic import BaseModel
 
 app = FastAPI()
 
-messages_db = {"0": "First post in FastAPI"}
+messages_db = [
+  {
+    "id": 0,
+    "text": "string"
+  },
+  {
+    "id": 1,
+    "text": "string"
+  },
+  {
+    "id": 2,
+    "text": "string"
+  }
+]
+
+class Message(BaseModel):
+    id: int
+    text: str
 
 @app.get('/')
 async def get_all_messages() -> dict:
-    return messages_db
+    return {'Сообщения': messages_db}
 
 @app.get("/messages/{message_id}")
-async def get_message(message_id: int) -> str:
+async def get_message(message_id: int):
     return messages_db[message_id]
 
 @app.post("/message")
-async def create_message(message:  str) -> str:
-    current_index = len(messages_db)
-    messages_db[current_index] = message
-    return f"Сообщение добавлено!"
+async def create_message(message:  Message) -> str:
+    if len(messages_db) == 0:
+        message.id = 0
+    else:
+        message.id = max([i.dict()['id'] for i in messages_db]) + 1
+    messages_db.append(message)
+    return f"Сообщение создано"
 
 @app.put("/message/{message_id}")
 async def update_message(message_id: str, message: str = Body()) -> str:
