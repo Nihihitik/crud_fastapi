@@ -6,15 +6,14 @@ messages_db = {"0": "First post in FastAPI"}
 
 @app.get('/')
 async def get_all_messages() -> dict:
-    pass
+    return messages_db
 
 @app.get("/messages/{message_id}")
 async def get_message(message_id: int) -> str:
-    pass
+    return messages_db[message_id]
 
 @app.post("/message")
 async def create_message(message:  str) -> str:
-    pass
 
 @app.put("/message/{message_id}")
 async def update_message(message_id: str, message: str) -> str:
